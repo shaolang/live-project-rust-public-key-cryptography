@@ -1,17 +1,17 @@
 use std::io::{self, Write};
+use std::time::Instant;
 use rpkc;
 
 fn main() {
-    let max = get_i64("Max: ");
-    let mut sieve = rpkc::sieve_of_eratosthenes(max as usize);
+    let primes = rpkc::sieve_to_primes(rpkc::sieve_of_eratosthenes(50_000_000));
 
-    if max < 1000 {
-        rpkc::print_sieve(&mut sieve);
-    }
+    simple_benchmark(&primes);
 
-    let mut primes = rpkc::sieve_to_primes(sieve);
-    if max < 1000 {
-        rpkc::print_numbers(&mut primes);
+    loop {
+        let n = get_i64("Number: ");
+        let mut factors = rpkc::find_factors_sieve(&primes, n);
+        print!("Factors: ");
+        rpkc::print_numbers(&mut factors);
     }
 }
 
@@ -30,3 +30,25 @@ fn get_i64(prompt: &str) -> i64 {
     trimmed.parse::<i64>().expect("Error parsing integer")
 }
 
+
+fn simple_benchmark(primes: &[i64]) {
+    // find the factors the slow way
+    let start1 = Instant::now();
+    let num = 44711100255155897;
+    let mut factors1 = rpkc::find_factors(num);
+    let duration1 = start1.elapsed();
+
+    println!("find_factors: {duration1:?} seconds");
+    rpkc::print_numbers(&mut factors1);
+    println!("Product: {}", rpkc::multiply_vector(&factors1));
+
+    // use Euler's sieve to find the factors
+    let start2 = Instant::now();
+    let num = 312680865509917;
+    let mut factors2 = rpkc::find_factors_sieve(&primes, num);
+    let duration2 = start2.elapsed();
+
+    println!("find_factors: {duration2:?} seconds");
+    rpkc::print_numbers(&mut factors2);
+    println!("Product: {}", rpkc::multiply_vector(&factors2));
+}

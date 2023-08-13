@@ -131,6 +131,11 @@ pub fn find_factors_sieve(primes: &[i64], mut num: i64) -> Vec<i64> {
     factors
 }
 
+pub fn multiply_vector(nums: &[i64]) -> i64 {
+    nums.iter()
+        .fold(1, |acc, e| acc * e)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -186,11 +191,21 @@ mod tests {
 
     #[test]
     fn test_find_factors_sieve() {
-        let primes = vec![2, 3, 5, 7, 11, 13, 17, 19, 21, 23];
+        let primes = sieve_to_primes(sieve_of_eratosthenes(50_000_000));
 
         assert_eq!(find_factors_sieve(&primes, 6), vec![2, 3]);
         assert_eq!(find_factors_sieve(&primes, 7), vec![7]);
         assert_eq!(find_factors_sieve(&primes, 26), vec![2, 13]);
         assert_eq!(find_factors_sieve(&primes, 63), vec![3, 3, 7]);
+        assert_eq!(
+            find_factors_sieve(&primes,312680865509917 ),
+            vec![7791799, 40129483]
+        );
+    }
+
+    #[test]
+    fn test_multiply_vector() {
+        assert_eq!(multiply_vector(&[2, 3]), 6);
+        assert_eq!(multiply_vector(&[2, 2, 3, 5]), 60);
     }
 }
