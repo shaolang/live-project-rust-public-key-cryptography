@@ -14,6 +14,10 @@ fn gcd(mut a: i64, mut b: i64) -> i64 {
     }
 }
 
+fn lcm(a: i64, b: i64) -> i64 {
+    b / gcd(a, b) * a
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -42,5 +46,10 @@ mod tests {
     fn gcd_absolutes_number_before_calculating() {
         assert_eq!(gcd(-48, 18), 6);
         assert_eq!(gcd(48, -18), 6);
+    }
+
+    #[test]
+    fn lcm_on_18_and_12() {
+        assert_eq!(lcm(12, 18), 36);
     }
 }
