@@ -136,63 +136,35 @@ mod tests {
     use super::*;
 
     #[test]
-    fn gcd_on_48_and_18() {
+    fn test_gcd() {
         assert_eq!(gcd(48, 18), 6);
-    }
-
-    #[test]
-    fn gcd_on_18_and_48_returns_same_answer_as_48_and_18() {
         assert_eq!(gcd(18, 48), 6);
-    }
-
-    #[test]
-    fn gcd_on_two_prime_numbers_returns_1() {
         assert_eq!(gcd(7, 11), 1);
-    }
-
-    #[test]
-    fn gcd_on_same_number_returns_the_number_itself() {
         assert_eq!(gcd(100, 100), 100);
-    }
-
-    #[test]
-    fn gcd_absolutes_number_before_calculating() {
         assert_eq!(gcd(-48, 18), 6);
         assert_eq!(gcd(48, -18), 6);
     }
 
     #[test]
-    fn lcm_on_18_and_12() {
+    fn test_lcm() {
         assert_eq!(lcm(12, 18), 36);
     }
 
     #[test]
-    fn fast_exp_on_3_exp_6() {
+    fn test_fast_exp() {
         assert_eq!(fast_exp(3, 6), 729);
-    }
-
-    #[test]
-    fn fast_exp_on_8_exp_9() {
         assert_eq!(fast_exp(8, 9), 134_217_728);
     }
 
     #[test]
-    fn fast_exp_mod_test_from_live_project() {
+    fn test_fast_exp_mod() {
         assert_eq!(fast_exp_mod(8, 6, 10), 4);
     }
 
     #[test]
-    fn sieve_of_eratosthenes_returns_false_for_0_and_1() {
+    fn test_sieve_of_eratosthenes() {
         assert_eq!(sieve_of_eratosthenes(1), vec![false, false]);
-    }
-
-    #[test]
-    fn sieve_of_eratosthenes_returns_false_for_2_and_3() {
         assert_eq!(sieve_of_eratosthenes(3), vec![false, false, true, true]);
-    }
-
-    #[test]
-    fn sieve_of_eratosthenes_for_numbers_up_to_25() {
         assert_eq!(
             sieve_of_eratosthenes(25),
             vec![false,                             // 0
