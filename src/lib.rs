@@ -97,6 +97,27 @@ pub fn print_numbers(primes: &mut Vec<i64>) {
     println!("");
 }
 
+// milestone 4
+// -----------
+
+pub fn find_factors(mut num: i64) -> Vec<i64> {
+    let mut primes = Vec::new();
+
+    while num % 2 == 0 {
+        primes.push(2);
+        num /= 2;
+    }
+
+    for n in (3..=num).step_by(2) {
+        while num % n == 0 {
+            primes.push(n);
+            num /= n;
+        }
+    }
+
+    primes
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -168,5 +189,13 @@ mod tests {
                  false, true, false, true, false,  // 16 - 20
                  false, false, true, false, false]  // 20 - 25
         );
+    }
+
+    #[test]
+    fn test_find_factors() {
+        assert_eq!(find_factors(6), vec![2, 3]);
+        assert_eq!(find_factors(7), vec![7]);
+        assert_eq!(find_factors(26), vec![2, 13]);
+        assert_eq!(find_factors(63), vec![3, 3, 7]);
     }
 }
