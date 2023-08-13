@@ -2,15 +2,16 @@ use std::io::{self, Write};
 use rpkc;
 
 fn main() {
-    loop {
-        let num = get_i64("Enter num: ");
-        let pow = get_i64("Enter pow: ");
-        let modulus = get_i64("Enter modulus: ");
-        let num_pow = rpkc::fast_exp(num, pow);
-        let num_pow_mod = rpkc::fast_exp_mod(num, pow, modulus);
+    let max = get_i64("Max: ");
+    let mut sieve = rpkc::sieve_of_eratosthenes(max as usize);
 
-        println!("fast_exp({num}, {pow}): {num_pow}");
-        println!("fast_exp_mod({num}, {pow}, {modulus}): {num_pow_mod}");
+    if max < 1000 {
+        rpkc::print_sieve(&mut sieve);
+    }
+
+    let mut primes = rpkc::sieve_to_primes(sieve);
+    if max < 1000 {
+        rpkc::print_numbers(&mut primes);
     }
 }
 

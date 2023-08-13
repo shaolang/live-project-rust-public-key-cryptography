@@ -1,3 +1,5 @@
+// milestone 1
+// -----------
 pub fn gcd(mut a: i64, mut b: i64) -> i64 {
     a = a.abs();
     b = b.abs();
@@ -19,6 +21,8 @@ pub fn lcm(a: i64, b: i64) -> i64 {
 }
 
 
+// milestone 2
+// -----------
 pub fn fast_exp(mut num: i64, mut pow: i64) -> i64 {
     let mut result = 1;
 
@@ -38,6 +42,8 @@ pub fn fast_exp_mod(num: i64, pow: i64, modulus: i64) -> i64 {
     fast_exp(num, pow) % modulus
 }
 
+// milestone 3
+// -----------
 pub fn sieve_of_eratosthenes(max: usize) -> Vec<bool> {
     let mut is_primes = [false; 1].repeat(max + 1);
 
@@ -57,6 +63,38 @@ pub fn sieve_of_eratosthenes(max: usize) -> Vec<bool> {
     }
 
     is_primes
+}
+
+pub fn print_sieve(sieve: &mut Vec<bool>) {
+    let odd_primes = sieve_to_primes(sieve.clone());
+    let nums = odd_primes
+        .into_iter()
+        .map(|e| e.to_string())
+        .collect::<Vec<String>>()
+        .join(" ");
+
+    println!("{nums}");
+}
+
+pub fn sieve_to_primes(sieve: Vec<bool>) -> Vec<i64> {
+    let mut primes = (3..sieve.len())
+        .step_by(2)
+        .filter(|i| sieve[*i])
+        .map(|i| i as i64)
+        .collect::<Vec<i64>>();
+
+    if sieve.len() > 2 {
+        primes.insert(0, 2);
+    }
+
+    primes
+}
+
+pub fn print_numbers(primes: &mut Vec<i64>) {
+    for prime in primes {
+        print!("{prime} ");
+    }
+    println!("");
 }
 
 #[cfg(test)]
