@@ -18,6 +18,29 @@ pub fn lcm(a: i64, b: i64) -> i64 {
     b / gcd(a, b) * a
 }
 
+
+pub fn fast_exp(mut num: i64, mut pow: i64) -> i64 {
+    let mut result = 1;
+
+    while pow >= 1 {
+        if pow % 2 == 1 {
+            result *= num;
+        }
+
+        pow /= 2;
+        num *= num;
+    }
+
+    result
+}
+
+pub fn fast_exp_mod(num: i64, pow: i64, modulus: i64) -> i64 {
+    fast_exp(num, pow) % modulus
+}
+
+// pub fn fast_exp_mod(mut num: i64, mut pow: i64, modulus: i64) -> i64 {
+// }
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -51,5 +74,20 @@ mod tests {
     #[test]
     fn lcm_on_18_and_12() {
         assert_eq!(lcm(12, 18), 36);
+    }
+
+    #[test]
+    fn fast_exp_on_3_exp_6() {
+        assert_eq!(fast_exp(3, 6), 729);
+    }
+
+    #[test]
+    fn fast_exp_on_8_exp_9() {
+        assert_eq!(fast_exp(8, 9), 134_217_728);
+    }
+
+    #[test]
+    fn fast_exp_mod_test_from_live_project() {
+        assert_eq!(fast_exp_mod(8, 6, 10), 4);
     }
 }

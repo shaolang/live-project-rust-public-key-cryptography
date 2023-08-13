@@ -3,13 +3,14 @@ use rpkc;
 
 fn main() {
     loop {
-        let a = get_i64("Enter the first integer: ");
-        let b = get_i64("Enter the first integer: ");
-        let gcd = rpkc::gcd(a, b);
-        let lcm = rpkc::lcm(a, b);
+        let num = get_i64("Enter num: ");
+        let pow = get_i64("Enter pow: ");
+        let modulus = get_i64("Enter modulus: ");
+        let num_pow = rpkc::fast_exp(num, pow);
+        let num_pow_mod = rpkc::fast_exp_mod(num, pow, modulus);
 
-        println!("GCD({a}, {b}): {gcd}");
-        println!("LCM({a}, {b}): {lcm}");
+        println!("fast_exp({num}, {pow}): {num_pow}");
+        println!("fast_exp_mod({num}, {pow}, {modulus}): {num_pow_mod}");
     }
 }
 
