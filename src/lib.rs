@@ -101,21 +101,34 @@ pub fn print_numbers(primes: &mut Vec<i64>) {
 // -----------
 
 pub fn find_factors(mut num: i64) -> Vec<i64> {
-    let mut primes = Vec::new();
+    let mut factors = Vec::new();
 
     while num % 2 == 0 {
-        primes.push(2);
+        factors.push(2);
         num /= 2;
     }
 
     for n in (3..=num).step_by(2) {
         while num % n == 0 {
-            primes.push(n);
+            factors.push(n);
             num /= n;
         }
     }
 
-    primes
+    factors
+}
+
+pub fn find_factors_sieve(primes: &[i64], mut num: i64) -> Vec<i64> {
+    let mut factors = Vec::new();
+
+    for prime in primes {
+        while num % prime == 0 {
+            factors.push(*prime);
+            num /= prime;
+        }
+    }
+
+    factors
 }
 
 #[cfg(test)]
@@ -197,5 +210,15 @@ mod tests {
         assert_eq!(find_factors(7), vec![7]);
         assert_eq!(find_factors(26), vec![2, 13]);
         assert_eq!(find_factors(63), vec![3, 3, 7]);
+    }
+
+    #[test]
+    fn test_find_factors_sieve() {
+        let primes = vec![2, 3, 5, 7, 11, 13, 17, 19, 21, 23];
+
+        assert_eq!(find_factors_sieve(&primes, 6), vec![2, 3]);
+        assert_eq!(find_factors_sieve(&primes, 7), vec![7]);
+        assert_eq!(find_factors_sieve(&primes, 26), vec![2, 13]);
+        assert_eq!(find_factors_sieve(&primes, 63), vec![3, 3, 7]);
     }
 }
