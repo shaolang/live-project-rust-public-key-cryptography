@@ -38,8 +38,26 @@ pub fn fast_exp_mod(num: i64, pow: i64, modulus: i64) -> i64 {
     fast_exp(num, pow) % modulus
 }
 
-// pub fn fast_exp_mod(mut num: i64, mut pow: i64, modulus: i64) -> i64 {
-// }
+pub fn sieve_of_eratosthenes(max: usize) -> Vec<bool> {
+    let mut is_primes = [false; 1].repeat(max + 1);
+
+    if max < 2 { return is_primes; }
+
+    is_primes[2] = true;
+    for i in (3..=max).step_by(2) {
+        is_primes[i] = true;
+    }
+
+    for i in (3..=max).step_by(2) {
+        if is_primes[i] {
+            for j in (i * 2..=max).step_by(i) {
+                is_primes[j] = false;
+            }
+        }
+    }
+
+    is_primes
+}
 
 #[cfg(test)]
 mod tests {
@@ -89,5 +107,28 @@ mod tests {
     #[test]
     fn fast_exp_mod_test_from_live_project() {
         assert_eq!(fast_exp_mod(8, 6, 10), 4);
+    }
+
+    #[test]
+    fn sieve_of_eratosthenes_returns_false_for_0_and_1() {
+        assert_eq!(sieve_of_eratosthenes(1), vec![false, false]);
+    }
+
+    #[test]
+    fn sieve_of_eratosthenes_returns_false_for_2_and_3() {
+        assert_eq!(sieve_of_eratosthenes(3), vec![false, false, true, true]);
+    }
+
+    #[test]
+    fn sieve_of_eratosthenes_for_numbers_up_to_25() {
+        assert_eq!(
+            sieve_of_eratosthenes(25),
+            vec![false,                             // 0
+                 false, true, true, false, true,    // 1 - 5
+                 false, true, false, false, false,  // 6 - 10
+                 true, false, true, false, false,  // 11 - 15
+                 false, true, false, true, false,  // 16 - 20
+                 false, false, true, false, false]  // 20 - 25
+        );
     }
 }
