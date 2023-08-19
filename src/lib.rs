@@ -1,3 +1,5 @@
+use std::time::{SystemTime, UNIX_EPOCH};
+
 // milestone 1
 // -----------
 pub fn gcd(mut a: i64, mut b: i64) -> i64 {
@@ -39,7 +41,9 @@ pub fn fast_exp(mut num: i64, mut pow: i64) -> i64 {
 }
 
 pub fn fast_exp_mod(num: i64, pow: i64, modulus: i64) -> i64 {
-    fast_exp(num, pow) % modulus
+    let base = num % modulus;
+
+    (2..=pow).into_iter().fold(base, |acc, _| acc * base % modulus)
 }
 
 // milestone 3
@@ -136,6 +140,65 @@ pub fn multiply_vector(nums: &[i64]) -> i64 {
         .fold(1, |acc, e| acc * e)
 }
 
+// milestone 5
+// -----------
+
+pub struct Prng {
+    seed: u32,
+}
+
+impl Prng {
+    pub fn new() -> Self {
+        let mut prng = Self { seed: 0 };
+        prng.randomize();
+
+        prng
+    }
+
+    fn randomize(&mut self) {
+        let millis = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Time went backwards")
+            .as_millis();
+        self.seed = millis as u32;
+    }
+
+    fn next_u32(&mut self) -> u32 {
+        self.seed = self.seed.wrapping_mul(1_103_515_245).wrapping_add(12_345);
+        self.seed %= 1 << 31;
+
+        self.seed
+    }
+
+    fn next_f64(&mut self) -> f64 {
+        let f = self.next_u32() as f64;
+        f / (2147483647.0 + 1.0)
+    }
+
+    fn next_i64(&mut self, min: i64, max: i64) -> i64 {
+        let range = (max - min) as f64;
+        let result = min as f64 + range * self.next_f64();
+
+        result as i64
+    }
+}
+
+pub fn is_probably_prime(rng: &mut Prng, candidate: u32, num_tests: u32) -> bool {
+    let pow = candidate as i64 - 1;
+
+    for _ in 0..num_tests {
+        let n = rng.next_i64(2, candidate as i64);
+
+        if fast_exp_mod(n, pow, candidate as i64) != 1 {
+            return false;
+        }
+    }
+
+    true
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -163,6 +226,10 @@ mod tests {
 
     #[test]
     fn test_fast_exp_mod() {
+        assert_eq!(fast_exp_mod(8, 2, 10), 4);
+        assert_eq!(fast_exp_mod(8, 3, 10), 2);
+        assert_eq!(fast_exp_mod(8, 4, 10), 6);
+        assert_eq!(fast_exp_mod(8, 5, 10), 8);
         assert_eq!(fast_exp_mod(8, 6, 10), 4);
     }
 
@@ -207,5 +274,14 @@ mod tests {
     fn test_multiply_vector() {
         assert_eq!(multiply_vector(&[2, 3]), 6);
         assert_eq!(multiply_vector(&[2, 2, 3, 5]), 60);
+    }
+
+    #[test]
+    fn test_is_probably_prime() {
+        let mut rng = Prng::new();
+
+        assert!(is_probably_prime(&mut rng, 5, 20));
+        assert!(is_probably_prime(&mut rng, 19, 20));
+        assert!(is_probably_prime(&mut rng, 7791799, 20));
     }
 }
