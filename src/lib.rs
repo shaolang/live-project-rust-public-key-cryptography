@@ -183,7 +183,7 @@ impl Prng {
     }
 }
 
-pub fn is_probably_prime(rng: &mut Prng, candidate: u32, num_tests: u32) -> bool {
+fn is_probably_prime(rng: &mut Prng, candidate: u32, num_tests: u32) -> bool {
     let pow = candidate as i64 - 1;
 
     for _ in 0..num_tests {
@@ -205,6 +205,40 @@ pub fn find_prime(rng: &mut Prng, min: i64, max: i64, num_tests: u32) -> u32 {
             return candidate;
         }
     }
+}
+
+// milestone 6
+// -----------
+
+pub fn totient(p: i64, q: i64) -> i64 {
+    lcm(p - 1, q - 1)
+}
+
+pub fn random_exponent(prng: &mut Prng, ln: i64) -> i64 {
+    loop {
+        let candidate = prng.next_i64(3, ln);
+
+        if gcd(candidate, ln) == 1 {
+            return candidate;
+        }
+    }
+}
+
+pub fn inverse_mod(a: i64, n: i64) -> i64 {
+    let mut t = 0;
+    let mut newt = 1;
+    let mut r = n;
+    let mut newr = a;
+
+    while newr != 0 {
+        let quotient = r / newr;
+        (t, newt) = (newt, t - quotient * newt);
+        (r, newr) = (newr, r - quotient * newr);
+    }
+
+    if r > 1 { return -1; }
+
+    if t < 0 { t + n } else { t }
 }
 
 #[cfg(test)]
@@ -291,5 +325,10 @@ mod tests {
         assert!(is_probably_prime(&mut rng, 5, 20));
         assert!(is_probably_prime(&mut rng, 19, 20));
         assert!(is_probably_prime(&mut rng, 7791799, 20));
+    }
+
+    #[test]
+    fn test_totient() {
+        assert_eq!(totient(3449, 5009), 2158448);
     }
 }
