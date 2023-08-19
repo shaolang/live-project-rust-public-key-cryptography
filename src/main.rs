@@ -2,16 +2,24 @@ use std::io::{self, Write};
 use std::time::Instant;
 use rpkc;
 
-fn main() {
-    let primes = rpkc::sieve_to_primes(rpkc::sieve_of_eratosthenes(50_000_000));
+const NUM_TESTS: i64 = 20;
 
-    simple_benchmark(&primes);
+fn main() {
+    let mut rng = rpkc::Prng::new();
+
+    let probability = 100.0 - 100.0 / rpkc::fast_exp(2, NUM_TESTS) as f64;
+    println!("Probability: {}%\n", probability);
 
     loop {
-        let n = get_i64("Number: ");
-        let mut factors = rpkc::find_factors_sieve(&primes, n);
-        print!("Factors: ");
-        rpkc::print_numbers(&mut factors);
+        let num_digits = get_i64("# Digits (max 9): ");
+        if num_digits < 1 { break; }
+
+        let mut min = 10i64.pow((num_digits - 1) as u32);
+        let max = 10 * min;
+
+        if min == 1 { min = 2; }
+
+        println!("Prime: {}", rpkc::find_prime(&mut rng, min, max, NUM_TESTS as u32));
     }
 }
 

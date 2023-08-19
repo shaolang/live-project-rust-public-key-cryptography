@@ -197,7 +197,15 @@ pub fn is_probably_prime(rng: &mut Prng, candidate: u32, num_tests: u32) -> bool
     true
 }
 
+pub fn find_prime(rng: &mut Prng, min: i64, max: i64, num_tests: u32) -> u32 {
+    loop {
+        let candidate = rng.next_i64(min, max) as u32;
 
+        if is_probably_prime(rng, candidate, num_tests) {
+            return candidate;
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
